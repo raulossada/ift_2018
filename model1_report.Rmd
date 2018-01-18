@@ -203,11 +203,14 @@ print(p_C);
 
 # 5 CONCLUSIONS
 
-# 6 REFERENCES
+# 6 Acknowledgements
+The authors thanks John P. DeLong for the support in the development of the project.
+
+
+# 7 REFERENCES
 [1] DeLong J. P., Al-Ammedi Z., Lyon S., Van Etten J. L. and Dunigan D. D. [Size-dependent catalysis of Chlorovirus population growth by a messy feeding predator](https://link.springer.com/article/10.1007%2Fs00248-017-1106-8). Microbial Ecology, November 2017.
 
 [2] Cáceres C. E., Knight C. J. and Hall S. R. [Predator-spreaders: predation can enhance parasite success in a planktonic host-parasite system](http://onlinelibrary.wiley.com/doi/10.1890/08-2154.1/abstract). Ecology, 2009.
-
 
 
 \newpage
