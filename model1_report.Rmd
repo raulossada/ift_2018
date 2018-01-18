@@ -1,7 +1,14 @@
 ---
-title: "Table manners and epidemics"
-author: "Group 5"
-date: "18/January/2018"
+title: "Group 5: Table manners and epidemics"
+author: 
+- Egydio Pacheco Neto
+- Fabio Baldivia Pohl
+- Gabriel Eduardo Moyano
+- Giovana Oshiro da Silva
+- Norma Rocio Forero Muñoz
+- Raul Ossada
+- Rodrigo Malavazi Corder
+date: "2018 January 18"
 output: html_document
 ---
 
@@ -170,6 +177,32 @@ print(p_C);
 # 5 CONCLUSIONS
 
 # 6 REFERENCES
-[1] DeLong J. P., Al-Ammedi Z., Lyon S., Van Etten J. L. and Dunigan D. D. Size-dependent catalysis of Chlorovirus population growth by a messy feeding predator. Microbial Ecology, November 2017.
+[1] DeLong J. P., Al-Ammedi Z., Lyon S., Van Etten J. L. and Dunigan D. D. [Size-dependent catalysis of Chlorovirus population growth by a messy feeding predator](https://link.springer.com/article/10.1007%2Fs00248-017-1106-8). Microbial Ecology, November 2017.
 
-[2] Cáceres C. E., Knight C. J. and Hall S. R. Predator-spreaders: predation can enhance parasite success in a planktonic host-parasite system. Ecology, 2009.
+[2] Cáceres C. E., Knight C. J. and Hall S. R. [Predator-spreaders: predation can enhance parasite success in a planktonic host-parasite system](http://onlinelibrary.wiley.com/doi/10.1890/08-2154.1/abstract). Ecology, 2009.
+
+
+
+\newpage
+# Appendix A
+
+
+## Silly simulation 1
+```{r, ap_1, fig.align='center'}
+# initial conditions
+state <- c(Z=0, P=0, Pz=0, D=0, C=0);
+
+# Numerical solution
+res <- ode(y=state, times=time, func=model1, parms=parameters, method='lsoda');
+
+# Plot
+res_df <- as.data.frame(x=res);
+res_m <- melt(data=res_df, id.vars='time');
+
+# colour=c('green', 'orange', 'blue', 'purple', 'red')
+p <- ggplot(data=res_m, mapping=aes(x=time, y=value, color=variable ) ) + 
+  geom_point(size=0.5) + 
+  labs(y='Populations');
+print(p);
+```
+
