@@ -1,0 +1,175 @@
+---
+title: "Table manners and epidemics"
+author: "Group 5"
+date: "18/January/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# 1 INTRODUCTION
+
+It is very difficult to pronounciate Zoochlorella.
+
+Zoochlorella are algae.
+
+Paramecium is a cilliate protist.
+
+Paramecium endosymbiosis with Zoochlorella.
+
+Didinium is a specialist predator of Paramecium. Messy Feeding and Full Feeding
+
+Chlorovirus is a large DNA, that can't attack Zoochlorellas that are inside a Paramecium
+
+# 2 MATERIALS AND METHODS
+
+## 2.1 Model Hipothesis
+
+What we didn't include?
+
+1) Due to the high growth rate of Zoochlorella inside of a Paramecium we assume that this population reaches its maximum
+
+2) Handling Time (Didinium is a voracious predator)
+
+
+What we included?
+
+A) Logistic growth rates
+
+B) Didinium is a specific predator
+
+C) Increased chance for a Chorovirus attached to the membrane of a Paramecium to infect a Zoochlorella that was inside it
+
+D) Messy feeding effect due larger size of Paramecium with Zoochlorella
+
+E) Endosymbiosis between Zoochlorella and Paramecium
+
+## 2.2 Equations
+
+\begin{align*} 
+\frac{dZ}{dt}&=r_{Z} Z \left(1-\frac{Z}{K_{Z}}\right) + (1-\alpha) g (m_{1} D + \mu_{P_{Z}}) P_{Z} - s Z P - i Z C \\ 
+\frac{dP}{dt}&=r_{P} P \left(1-\frac{P}{K_{P}}\right) - \theta s Z P - (m_{2} + f_{2}) P D \\
+\frac{dP_{Z}}{dt}&=r_{P_{z}} P_{z} \left(1-\frac{P_{Z}}{K_{P_{Z}}}\right) + \theta s Z P - (m_{1} + f_{1}) P_{Z} D \\
+\frac{dD}{dt}&=\delta \left[ (m_{2} + f_{2}) P + (m_{1} + f_{1}) P_{Z} \right] D - \mu_{D} D \\
+\frac{dC}{dt}&=K_{1} i Z C + K_{2} \alpha g (m_{1} D + \mu_{P_{Z}}) P_{Z} C - \mu_{C} C
+\end{align*}
+
+
+## 2.3 Numerical Aproximation
+
+```{r, simulation, message=FALSE}
+# libraries
+library('deSolve');
+library('reshape2');
+library('ggplot2');
+library('ggthemes');
+library('scales');
+
+# time sequence 
+time <- seq(from=0, to=300, by=0.01);
+
+# parameters
+parameters <- c(r_Z=1, K_z=1e10, alpha=0, g=1, m1=0.75, mu_Pz=1, s=1, i=1, 
+                r_P=1, K_P=100, theta=1, m2=0.30, f2=0.70,
+                r_Pz=1, K_Pz=100, f1=0.25, 
+                delta=1, mu_D=1, 
+                k1=1, k2=1, mu_C=1);
+
+# model
+model1 <- function(t, state, parameters){
+  with( as.list( c(state, parameters) ), {
+    
+    dZ  <- r_Z*Z*(1-Z/K_z) + (1-alpha)*g*(m1*D + mu_Pz)*Pz - s*Z*P - i*Z*C;
+    dP  <- r_P*P*(1-P/K_P) - theta*s*Z*P - (m2+f2)*P*D;
+    dPz <- r_Pz*Pz*(1-Pz/K_Pz) + theta*s*Z*P - (m1+f1)*Pz*D;
+    dD  <- delta*( (m2+f2)*P + (m1+f1)*Pz )*D - mu_D*D;
+    dC  <- k1*i*Z*C + k2*alpha*g*(m1*D + mu_Pz)*Pz*C - mu_C*C;
+    
+    return( list( c(dZ, dP, dPz, dD, dC) ) );
+  })
+}
+
+# initial conditions
+state <- c(Z=1, P=0, Pz=0, D=0, C=0);
+
+# Numerical solution
+res <- ode(y=state, times=time, func=model1, parms=parameters, method='lsoda');
+```
+
+\newpage
+# 3 RESULTS
+
+```{r, plot_base}
+# Plot
+res_df <- as.data.frame(x=res);
+res_m <- melt(data=res_df, id.vars='time');
+```
+
+### Plot of all populations
+```{r, plot_all, fig.align='center'}
+# colour=c('green', 'orange', 'blue', 'purple', 'red')
+p <- ggplot(data=res_m, mapping=aes(x=time, y=value, color=variable ) ) + 
+  geom_point(size=0.5) + 
+  labs(y='Populations');
+print(p);
+```
+
+\newpage
+### Plot of the Zoochlorella Population
+```{r, plot_Z, fig.align='center'}
+Z_m <- res_m[which(res_m$variable=='Z'), ];
+p_Z <- ggplot(data=Z_m, mapping=aes(x=time, y=value) ) + 
+  geom_point(size=0.5, col='green') + 
+  labs(y='Number of Zoochlorella (Z)');
+print(p_Z);
+```
+
+\newpage
+### Plot of the Paramecium Population
+```{r, plot_P, fig.align='center'}
+P_m <- res_m[which(res_m$variable=='P'), ];
+p_P <- ggplot(data=P_m, mapping=aes(x=time, y=value) ) + 
+  geom_point(size=0.5, col='orange') + 
+  labs(y='Number of Paramecium spp (P)');
+print(p_P);
+```
+
+\newpage
+### Plot of the Paramecium with Zoochlorella Population
+```{r, plot_Pz, fig.align='center'}
+Pz_m <- res_m[which(res_m$variable=='Pz'), ];
+p_Pz <- ggplot(data=Pz_m, mapping=aes(x=time, y=value) ) + 
+  geom_point(size=0.5, col='blue') + 
+  labs(y='Number of Paramecium spp with Zoochlorella (Pz)');
+print(p_Pz);
+```
+
+\newpage
+### Plot of the Didinium Population
+```{r, plot_D, fig.align='center'}
+D_m <- res_m[which(res_m$variable=='D'), ];
+p_D <- ggplot(data=D_m, mapping=aes(x=time, y=value) ) + 
+  geom_point(size=0.5, col='purple') + 
+  labs(y='Number of Didinium nasutum (D)');
+print(p_D);
+```
+
+\newpage
+### Plot of the Chlorovirus Population
+```{r, plot_C, fig.align='center'}
+C_m <- res_m[which(res_m$variable=='C'), ];
+p_C <- ggplot(data=C_m, mapping=aes(x=time, y=value) ) + 
+  geom_point(size=0.5, col='red') + 
+  labs(y='Number of Chlorovirus (C)');
+print(p_C);
+```
+
+# 4 DISCUSSION
+
+# 5 CONCLUSIONS
+
+# 6 REFERENCES
+[1] DeLong J. P., Al-Ammedi Z., Lyon S., Van Etten J. L. and Dunigan D. D. Size-dependent catalysis of Chlorovirus population growth by a messy feeding predator. Microbial Ecology, November 2017.
+
+[2] Cáceres C. E., Knight C. J. and Hall S. R. Predator-spreaders: predation can enhance parasite success in a planktonic host-parasite system. Ecology, 2009.

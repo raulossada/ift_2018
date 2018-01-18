@@ -1,1 +1,1 @@
-# ift_2018
+# Repository for the project of Group 5 of the VII Southern-Summer School on Mathematical Biology held at IFT in Jan. 15 - Jan. 21 (2018)
