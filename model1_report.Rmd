@@ -15,6 +15,9 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+Link to Github Repository: https://github.com/raulossada/ift_2018
+
 # 1 INTRODUCTION
 
 It is very difficult to pronounciate Zoochlorella.
