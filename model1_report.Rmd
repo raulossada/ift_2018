@@ -20,7 +20,7 @@ Link to Github Repository: https://github.com/raulossada/ift_2018
 
 # 1 INTRODUCTION
 
-It is very difficult to pronounciate Zoochlorella.
+It is very difficult to pronounciate Zoochlorella. (guestimate)
 
 Zoochlorella are algae.
 
@@ -58,11 +58,11 @@ E) Endosymbiosis between Zoochlorella and Paramecium
 ## 2.2 Equations
 
 \begin{align*} 
-\frac{dZ}{dt}&=r_{Z} Z \left(1-\frac{Z}{K_{Z}}\right) + (1-\alpha) g (m_{1} D + \mu_{P_{Z}}) P_{Z} - s Z P - i Z C \\ 
-\frac{dP}{dt}&=r_{P} P \left(1-\frac{P}{K_{P}}\right) - \theta s Z P - (m_{2} + f_{2}) P D \\
-\frac{dP_{Z}}{dt}&=r_{P_{z}} P_{z} \left(1-\frac{P_{Z}}{K_{P_{Z}}}\right) + \theta s Z P - (m_{1} + f_{1}) P_{Z} D \\
-\frac{dD}{dt}&=\delta \left[ (m_{2} + f_{2}) P + (m_{1} + f_{1}) P_{Z} \right] D - \mu_{D} D \\
-\frac{dC}{dt}&=K_{1} i Z C + K_{2} \alpha g (m_{1} D + \mu_{P_{Z}}) P_{Z} C - \mu_{C} C
+\frac{dZ}{dt}&=r_{Z} Z \left(1-\frac{Z}{K_{Z}}\right) + (1-\alpha) g (w D + m_{P_{Z}}) P_{Z} - s Z P - i Z C \\ 
+\frac{dP}{dt}&=r_{P} P \left(1-\frac{P}{K_{P}}\right) - h s Z P - u j P D \\
+\frac{dP_{Z}}{dt}&=r_{P_{z}} P_{z} \left(1-\frac{P_{Z}}{K_{P_{Z}}}\right) + h s Z P - j P_{Z} D \\
+\frac{dD}{dt}&=e j (u P + P_{Z}) D - m_{D} D \\
+\frac{dC}{dt}&=b i Z C + b \alpha g (w D + m_{P_{Z}}) P_{Z} C - m_{C} C
 \end{align*}
 
 
@@ -86,19 +86,19 @@ parameters <- c(r_Z=0.9,
                 K_z=5000,
                 K_P=1000, 
                 K_Pz=1200, 
-                mu_Pz=0.001, 
-                mu_D=0.4, 
-                mu_C=0.6,
+                m_Pz=0.001, 
+                m_D=0.4, 
+                m_C=0.6,
                 s=0.6, 
                 i=0.05, 
-                delta=0.2, 
-                pp=0.01, 
-                qq=0.3,
+                e=0.2, 
+                j=0.01, 
+                q=0.3,
                 g=500, 
                 alpha=0, 
-                theta=0.1, 
-                k1=1, 
-                k2=1);
+                h=0.1, 
+                b=1, 
+                u=1);
 
 # m1 = q*p
 # m2+f2 = p
@@ -113,11 +113,12 @@ parameters <- c(r_Z=0.9,
 model1 <- function(t, state, parameters){
   with( as.list( c(state, parameters) ), {
     
-    dZ  <- r_Z*Z*(1-Z/K_z) + (1-alpha)*g*(qq*pp*D + mu_Pz)*Pz - s*Z*P - i*Z*C;
-    dP  <- r_P*P*(1-P/K_P) - theta*s*Z*P - (pp)*P*D;
-    dPz <- r_Pz*Pz*(1-Pz/K_Pz) + theta*s*Z*P - (pp)*Pz*D;
-    dD  <- delta*( (pp)*P + (pp)*Pz )*D - mu_D*D;
-    dC  <- k1*i*Z*C + k2*alpha*g*(qq*pp*D + mu_Pz)*Pz*C - mu_C*C;
+    w <- q*j;
+    dZ  <- r_Z*Z*(1-Z/K_z) + (1-alpha)*g*(w*D + m_Pz)*Pz - s*Z*P - i*Z*C;
+    dP  <- r_P*P*(1-P/K_P) - h*s*Z*P - (u*j)*P*D;
+    dPz <- r_Pz*Pz*(1-Pz/K_Pz) + h*s*Z*P - (j)*Pz*D;
+    dD  <- e*j*( u*P + Pz )*D - m_D*D;
+    dC  <- b*i*Z*C + b*alpha*g*(w*D + m_Pz)*Pz*C - m_C*C;
     
     return( list( c(dZ, dP, dPz, dD, dC) ) );
   })
@@ -144,7 +145,7 @@ res_m <- melt(data=res_df, id.vars='time');
 p <- ggplot(data=res_m, mapping=aes(x=time, y=value, color=variable ) ) + 
   geom_point(size=0.5) + 
   scale_color_manual(breaks=c("Z", "P", "Pz", "D", "C"), values=c("green", "orange", "blue", "purple", "red") ) + 
-  labs(y='Populations');
+  labs(y='Populations', color='Pop');
 print(p);
 ```
 
@@ -230,7 +231,7 @@ res_m <- melt(data=res_df, id.vars='time');
 p <- ggplot(data=res_m, mapping=aes(x=time, y=value, color=variable ) ) + 
   geom_point(size=0.5) +
   scale_color_manual(breaks=c("Z", "P", "Pz", "D", "C"), values=c("green", "orange", "blue", "purple", "red") ) + 
-  labs(y='Populations');
+  labs(y='Populations', color='Pop');
 print(p);
 ```
 
@@ -252,7 +253,7 @@ res_m <- melt(data=res_df, id.vars='time');
 p <- ggplot(data=res_m, mapping=aes(x=time, y=value, color=variable ) ) + 
   geom_point(size=0.5) +
   scale_color_manual(breaks=c("Z", "P", "Pz", "D", "C"), values=c("green", "orange", "blue", "purple", "red") ) + 
-  labs(y='Populations');
+  labs(y='Populations', color='Pop');
 print(p);
 ```
 
@@ -274,7 +275,7 @@ res_m <- melt(data=res_df, id.vars='time');
 p <- ggplot(data=res_m, mapping=aes(x=time, y=value, color=variable ) ) + 
   geom_point(size=0.5) +
   scale_color_manual(breaks=c("Z", "P", "Pz", "D", "C"), values=c("green", "orange", "blue", "purple", "red") ) + 
-  labs(y='Populations');
+  labs(y='Populations', color='Pop');
 print(p);
 ```
 
@@ -294,7 +295,7 @@ res_m <- melt(data=res_df, id.vars='time');
 p <- ggplot(data=res_m, mapping=aes(x=time, y=value, color=variable ) ) + 
   geom_point(size=0.5) +
   scale_color_manual(breaks=c("Z", "P", "Pz", "D", "C"), values=c("green", "orange", "blue", "purple", "red") ) + 
-  labs(y='Populations');
+  labs(y='Populations', color='Pop');
 print(p);
 ```
 
@@ -314,7 +315,7 @@ res_m <- melt(data=res_df, id.vars='time');
 p <- ggplot(data=res_m, mapping=aes(x=time, y=value, color=variable ) ) + 
   geom_point(size=0.5) +
   scale_color_manual(breaks=c("Z", "P", "Pz", "D", "C"), values=c("green", "orange", "blue", "purple", "red") ) + 
-  labs(y='Populations');
+  labs(y='Populations', color='Pop');
 print(p);
 ```
 
@@ -334,6 +335,6 @@ res_m <- melt(data=res_df, id.vars='time');
 p <- ggplot(data=res_m, mapping=aes(x=time, y=value, color=variable ) ) + 
   geom_point(size=0.5) +
   scale_color_manual(breaks=c("Z", "P", "Pz", "D", "C"), values=c("green", "orange", "blue", "purple", "red") ) + 
-  labs(y='Populations');
+  labs(y='Populations', color='Pop');
 print(p);
 ```
