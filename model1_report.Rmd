@@ -115,9 +115,9 @@ res_m <- melt(data=res_df, id.vars='time');
 
 ### Plot of all populations
 ```{r, plot_all, fig.align='center'}
-# colour=c('green', 'orange', 'blue', 'purple', 'red')
 p <- ggplot(data=res_m, mapping=aes(x=time, y=value, color=variable ) ) + 
   geom_point(size=0.5) + 
+  scale_color_manual(breaks=c("Z", "P", "Pz", "D", "C"), values=c("green", "orange", "blue", "purple", "red") ) + 
   labs(y='Populations');
 print(p);
 ```
@@ -188,10 +188,12 @@ print(p_C);
 
 
 ## Silly simulation 1
-```{r, ap_1, fig.align='center'}
+```{r, ap1}
 # initial conditions
 state <- c(Z=0, P=0, Pz=0, D=0, C=0);
+```
 
+```{r, ap1_plot, fig.align='center', echo=FALSE}
 # Numerical solution
 res <- ode(y=state, times=time, func=model1, parms=parameters, method='lsoda');
 
@@ -199,10 +201,53 @@ res <- ode(y=state, times=time, func=model1, parms=parameters, method='lsoda');
 res_df <- as.data.frame(x=res);
 res_m <- melt(data=res_df, id.vars='time');
 
-# colour=c('green', 'orange', 'blue', 'purple', 'red')
 p <- ggplot(data=res_m, mapping=aes(x=time, y=value, color=variable ) ) + 
-  geom_point(size=0.5) + 
+  geom_point(size=0.5) +
+  scale_color_manual(breaks=c("Z", "P", "Pz", "D", "C"), values=c("green", "orange", "blue", "purple", "red") ) + 
   labs(y='Populations');
 print(p);
 ```
 
+
+
+## Silly simulation 2
+```{r, ap2}
+# initial conditions
+state <- c(Z=1, P=0, Pz=0, D=0, C=0);
+```
+```{r, ap2_plot, fig.align='center', echo=FALSE}
+# Numerical solution
+res <- ode(y=state, times=time, func=model1, parms=parameters, method='lsoda');
+
+# Plot
+res_df <- as.data.frame(x=res);
+res_m <- melt(data=res_df, id.vars='time');
+
+p <- ggplot(data=res_m, mapping=aes(x=time, y=value, color=variable ) ) + 
+  geom_point(size=0.5) +
+  scale_color_manual(breaks=c("Z", "P", "Pz", "D", "C"), values=c("green", "orange", "blue", "purple", "red") ) + 
+  labs(y='Populations');
+print(p);
+```
+
+
+
+## Silly simulation 3
+```{r, ap3}
+# initial conditions
+state <- c(Z=0, P=1, Pz=0, D=0, C=0);
+```
+```{r, ap3_plot, fig.align='center', echo=FALSE}
+# Numerical solution
+res <- ode(y=state, times=time, func=model1, parms=parameters, method='lsoda');
+
+# Plot
+res_df <- as.data.frame(x=res);
+res_m <- melt(data=res_df, id.vars='time');
+
+p <- ggplot(data=res_m, mapping=aes(x=time, y=value, color=variable ) ) + 
+  geom_point(size=0.5) +
+  scale_color_manual(breaks=c("Z", "P", "Pz", "D", "C"), values=c("green", "orange", "blue", "purple", "red") ) + 
+  labs(y='Populations');
+print(p);
+```
